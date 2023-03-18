@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test cases of  Cameraimage component calls deletetext function when button is pressed 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#75E6DA",
+      "flex": 1,
+    }
+  }
+>
+  <RCTScrollView>
+    <View>
+      <View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#75E6DA",
+              "flex": 1,
+              "justifyContent": "center",
+            }
+          }
+        >
+          <RCTScrollView
+            contentContainerStyle={
+              {
+                "height": 300,
+                "width": 400,
+              }
+            }
+            data={[]}
+            getItem={[Function]}
+            getItemCount={[Function]}
+            keyExtractor={[Function]}
+            onContentSizeChange={[Function]}
+            onLayout={[Function]}
+            onMomentumScrollBegin={[Function]}
+            onMomentumScrollEnd={[Function]}
+            onScroll={[Function]}
+            onScrollBeginDrag={[Function]}
+            onScrollEndDrag={[Function]}
+            removeClippedSubviews={true}
+            renderItem={[Function]}
+            scrollEventThrottle={50}
+            stickyHeaderIndices={[]}
+            testID="flatlistitem"
+            viewabilityConfigCallbackPairs={[]}
+          >
+            <View />
+          </RCTScrollView>
+        </View>
+        <View
+          style={
+            {
+              "alignContent": "center",
+              "alignItems": "center",
+              "flex": 1,
+              "justifyContent": "center",
+              "marginTop": 300,
+              "position": "relative",
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+            testID="actionBtnText"
+          >
+            <Text
+              style={
+                {
+                  "alignItems": "center",
+                  "alignSelf": "center",
+                  "backgroundColor": "black",
+                  "borderRadius": 8,
+                  "color": "white",
+                  "fontSize": 25,
+                  "fontWeight": "700",
+                  "justifyContent": "center",
+                  "padding": 10,
+                }
+              }
+            >
+              Open bottom action
+            </Text>
+          </View>
+        </View>
+        <View
+          testID="actionSheet"
+        />
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;

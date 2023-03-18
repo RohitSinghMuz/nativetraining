@@ -1,0 +1,22 @@
+ 1  sudo apt-get update
+    2  sudo apt install nodejs
+    3  node -v
+   14  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+   15  source ~/.bashrc
+   16  nvm install v14.10.0
+   17  source ~/.bashrc
+   18  nvm list-remote
+   19  nvm install v16.17.0
+   20  node -v
+   21  npm -v
+   23  sudo apt install yarn
+   24  npm install -g expo-cli
+   25  npm i -g  @react-native-community/cli
+   27  sudo apt install openjdk-11-jdk
+   34  java --version
+   35  sudo add-apt-repository ppa:maarten-fonville/android-studio
+   36  sudo apt update
+   37  sudo apt install android-studio
+   39  expo --version
+   nano ~/.bashrc then add lines as below.
+   alias start_emulator='cd /home/extended-training-3/Android/Sdk/emulator && ./emulator @Pixel_XL_API_30'

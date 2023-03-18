@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "249036000071",
+    "project_id": "nativelogin-7c230",
+    "storage_bucket": "nativelogin-7c230.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249036000071:android:003f850f2469abf6391a62",
+        "android_client_info": {
+          "package_name": "com.figmaseventeen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "249036000071-m2g10ocrl6cc6l33k45nokjgrijsn1ef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.figmaseventeen",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "249036000071-f3vbq5e02g34uh9t3b6gnslcb9leshj3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYiAR9dVutqNjwThlINcXlSIaY9tADtQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "249036000071-f3vbq5e02g34uh9t3b6gnslcb9leshj3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

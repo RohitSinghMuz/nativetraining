@@ -1,0 +1,443 @@
+import React, {Component} from 'react';
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  View,
+  PermissionsAndroid,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+  FlatList,
+  ScrollView,
+  Platform,
+} from 'react-native';
+import ActionSheet from 'react-native-actionsheet';
+
+//@ts-ignore
+import {Ionicons} from 'react-native-vector-icons';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import mockResponse from 'jest-fetch-mock';
+
+interface IProps {}
+interface IState {
+  img: any;
+  gallery: any;
+  modalVisible: boolean;
+  data: any[];
+}
+
+const optionarray = ['Select From File', 'Captures with camera', 'Close'];
+
+class Cameraimage extends Component<IProps, IState> {
+  actionSheet: any;
+
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      img: '',
+      data: [],
+      gallery: '',
+      modalVisible: false,
+    };
+    this.actionSheet = React.createRef();
+  }
+
+  showActionSheet = () => {
+    this.actionSheet.current.show();
+  };
+
+  handlePress = (index: any) => {
+    // Alert.alert(optionarray[index]);
+    if (index === 0) {
+      this.imageGalleryLaunch();
+      this.options;
+    } else if (index === 1) {
+      this.cameraLaunch();
+      this.options;
+    }
+  };
+
+  options: any = {
+    saveToPhotos: true,
+    mediaType: 'photo',
+    allowsMultipleSelection: true,
+  };
+  imageGalleryLaunch = async () => {
+    const result = await launchImageLibrary(this.options);
+    //@ts-ignore
+    result.assets[0].uri
+      ? //@ts-ignore
+        this.setState({gallery: result.assets[0].uri})
+      : null;
+    this.setState({modalVisible: !this.state.modalVisible});
+    this.setState({data: [...this.state.data, this.state.gallery]});
+  };
+
+  cameraLaunch = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          const result = await launchCamera(this.options);
+          //@ts-ignore
+          result.assets[0].uri
+            ? //@ts-ignore
+              this.setState({gallery: result.assets[0].uri})
+            : null;
+          this.setState({data: [...this.state.data, this.state.gallery]});
+          this.setState({modalVisible: !this.state.modalVisible});
+        }
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
+
+    // else if (Platform.OS === 'ios') {
+    //   try {
+    //     const granted = await request(PERMISSIONS.IOS.CAMERA);
+    //     if (granted === 'granted') {
+    //       const result = await launchCamera(this.options);
+    //       //@ts-ignore
+    //       result.assets[0].uri
+    //         ? //@ts-ignore
+    //           this.setState({gallery: result.assets[0].uri})
+    //         : null;
+    //       this.setState({data: [...this.state.data, this.state.gallery]});
+    //       this.setState({modalVisible: !this.state.modalVisible});
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //     return false;
+    //   }
+    // }
+  };
+
+  deletetext = (idx: any) => {
+    const deleteitem = this.state.data?.filter((todo: any, i: any) => i != idx);
+    this.setState({
+      data: deleteitem,
+    });
+  };
+
+  render() {
+    const {modalVisible} = this.state;
+    console.log(this.state.data, 'data');
+    return (
+      <SafeAreaView
+        style={{
+          backgroundColor: '#75E6DA',
+          flex: 1,
+        }}>
+        <ScrollView>
+          <View>
+            <View style={styles.centeredView}>
+              <FlatList
+                // numColumns={6}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                }}
+                data={this.state.data}
+                keyExtractor={(item: any, index: number) => index.toString()}
+                renderItem={({item, index}: any) => (
+                  <View style={styles.Imagedisplay}>
+                    <Image
+                      key={index}
+                      style={{
+                        height: 150,
+                        width: 150,
+                        borderRadius: 10,
+                        margin: 10,
+                      }}
+                      source={{
+                        uri: item ? item : null,
+                      }}
+                    />
+
+                    <Ionicons
+                      onPress={() => this.deletetext(index)}
+                      name="ios-close-sharp"
+                      size={25}
+                      color="red"
+                      style={{marginLeft: 70, fontSize: 30}}
+                    />
+                  </View>
+                )}
+              />
+
+              <Modal
+                testID="ModalId"
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  Alert.alert('Modal has been closed.');
+                  this.setState({modalVisible: !modalVisible});
+                }}>
+                <View style={styles.centeredViewModal}>
+                  <View style={styles.modalView}>
+                    <View>
+                      <TouchableOpacity
+                        testID="selectCameraId"
+                        onPress={() => this.cameraLaunch()}
+                        style={[styles.button, styles.buttonClose]}>
+                        <Text style={styles.textStyle}>Select Camera </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        testID="selectfileId"
+                        onPress={() => this.imageGalleryLaunch()}
+                        style={[styles.button, styles.buttonClose]}>
+                        <Text style={styles.textStyle}>Select File</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity
+                      testID="closemodaltest"
+                      style={[styles.button, styles.buttonClosen]}
+                      onPress={() =>
+                        this.setState({modalVisible: !modalVisible})
+                      }>
+                      <Text style={styles.textStyleClose}>Close</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+
+              {/* <View style={{flexDirection: 'row', marginVertical: 1}}>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonOpen]}
+                  onPress={() => this.setState({modalVisible: true})}>
+                  <Text style={styles.textStyle}>Gallery or Camera</Text>
+                </TouchableOpacity>
+              </View> */}
+            </View>
+
+            <View style={styles.actionbtnfile}>
+              <TouchableOpacity
+                testID="actionBtnText"
+                onPress={this.showActionSheet}>
+                <Text style={styles.actionbtn}>Open bottom action</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ActionSheet
+              ref={this.actionSheet}
+              // testID="actionBtnID"
+              // title={'actionsheetexample'}
+              options={optionarray}
+              cancelButtonIndex={2}
+              onPress={this.handlePress}
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+}
+export default Cameraimage;
+const styles = StyleSheet.create({
+  actionbtnfile: {
+    marginTop: 300,
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  actionbtn: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    color: 'white',
+    fontWeight: '700',
+    padding: 10,
+    borderRadius: 8,
+    fontSize: 25,
+  },
+  Imagedisplay: {
+    flex: 1,
+    // flexDirection: 'row',
+
+    justifyContent: 'flex-start',
+    margin: 10,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#75E6DA',
+    alignItems: 'center',
+  },
+  centeredViewModal: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,.6)',
+    alignItems: 'center',
+  },
+  modalView: {
+    width: '100%',
+    backgroundColor: '#AAE3E2',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    marginVertical: 100,
+    backgroundColor: '#A0E7E5',
+    height: 60,
+  },
+  buttonClose: {
+    backgroundColor: '#189AB4',
+    margin: 20,
+  },
+  buttonClosen: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: '#0C2D48',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 5,
+    fontSize: 22,
+  },
+  textStyleClose: {
+    color: '#0C2D48',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 50,
+    fontSize: 22,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
+
+
+
+
+
+
+    // else if (Platform.OS === 'ios') {
+    //   try {
+    //     const granted = await request(PERMISSIONS.IOS.CAMERA);
+    //     if (granted === 'granted') {
+    //       const result = await launchCamera(this.options);
+    //       //@ts-ignore
+    //       result.assets[0].uri
+    //         ? //@ts-ignore
+    //           this.setState({gallery: result.assets[0].uri})
+    //         : null;
+    //       this.setState({data: [...this.state.data, this.state.gallery]});
+    //       this.setState({modalVisible: !this.state.modalVisible});
+    //     }
+    //   } catch (error) {
+    //     console.log(error);
+    //     return false;
+    //   }
+    // }
+
+
+
+
+
+
+
+
+
+    import React from 'react';
+import {render, screen, fireEvent, act} from '@testing-library/react-native';
+import Cameraimage from '../Cameraimage';
+
+jest.mock('react-native-image-picker', () => ({
+  launchCamera: jest.fn(),
+  launchImageLibrary: jest.fn(),
+}));
+jest.mock('react-native-vector-icons/Ionicons', () => () => {});
+// class mockClass extends React.Component {
+//   render(): React.ReactNode {
+//     return <></>;
+//   }
+// }
+jest.mock('react-native-actionsheet', () => {
+  return (props: any) => {
+    console.log('-----clg', props);
+    props.onPress();
+    return <></>;
+  };
+});
+
+jest.spyOn(React, 'createRef').mockImplementation(() => ({
+  current: {
+    show: jest.fn(),
+  },
+}));
+
+describe('Test cases of  Cameraimage component', () => {
+  it('onPress function is called when "Select File" button is pressed', async () => {
+    const {getByTestId} = render(<Cameraimage />);
+    const selectFileButton = getByTestId('actionBtnText');
+    fireEvent.press(selectFileButton);
+    // expect(mockFunction).toHaveBeenCalled();
+  });
+});
+
+
+  // cameraLaunch = async () => {
+  //   Platform.OS === 'android';
+  //   try {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.CAMERA,
+  //     );
+  //     // console.log('granted', granted);
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       const result = await launchCamera(this.options);
+  //       result &&
+  //       result.assets &&
+  //       result.assets.length > 0 &&
+  //       result.assets[0].uri
+  //         ? this.setState({gallery: result.assets[0].uri}, () => {
+  //             this.setState({data: [...this.state.data, this.state.gallery]});
+  //           })
+  //         : null;
+  //     } else {
+  //       console.log('not found');
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     return false;
+  //   }
+  // };
+
+
+    // it('  request PermissionsAndroid camera ', async () => {
+  //   const permission = PermissionsAndroid.PERMISSIONS.CAMERA;
+  //   const granted: any = true;
+
+  //   jest.spyOn(PermissionsAndroid, 'request').mockImplementation(() => granted);
+
+  //   expect(PermissionsAndroid.request).toHaveBeenCalledWith(permission);
+  // });

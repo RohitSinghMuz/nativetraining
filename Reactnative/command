@@ -1,0 +1,5 @@
+npx react-native init hello_w
+  cd hello_w/
+  npx react-native run-android
+   npx react-native start
+

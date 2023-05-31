@@ -36,7 +36,7 @@ class Formonchange extends Component<{}, IState> {
 
   validateName = () => {
     const {name} = this.state;
-
+    console.log('name-----', name, name.length);
     if (!name) {
       this.setState({nameError: 'firstName is required'});
     } else if (name.length < 3) {
